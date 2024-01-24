@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 
+    public Animator animplayer;
     public float speed;
     public float JumpForce;
 
@@ -13,10 +14,12 @@ public class Player : MonoBehaviour
 
 
     private Rigidbody2D rig;
+    private Animator anim;
 
     void Start()
     {
         rig = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
     }
 
     void Update()
@@ -28,7 +31,24 @@ public class Player : MonoBehaviour
     void Move()
     {
         Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0f, 0f);
-        transform.position += movement * Time.deltaTime * speed;
+        transform.position += movement * Time.deltaTime * speed;  
+
+        if(Input.GetAxis("Horizontal") > 0f)
+        {
+            anim.SetBool("andando", true);
+            transform.eulerAngles = new Vector3(0f,0f,0f);
+        }
+
+        if(Input.GetAxis("Horizontal") < 0f)
+        {
+            anim.SetBool("andando", true);
+            transform.eulerAngles = new Vector3(0f,180f,0f);
+        }
+
+        if(Input.GetAxis("Horizontal") == 0f)
+        {
+            anim.SetBool("andando", false);
+        }
     }
 
     void Jump()
@@ -39,6 +59,7 @@ public class Player : MonoBehaviour
             {
                 rig.AddForce(new Vector2(0f, JumpForce), ForceMode2D.Impulse);
                 doubleJump = true;
+                anim.SetBool("jump", true);
             }
             else
             {
@@ -46,6 +67,7 @@ public class Player : MonoBehaviour
                 {
                     rig.AddForce(new Vector2(0f, JumpForce), ForceMode2D.Impulse);
                     doubleJump = false;
+                    anim.SetBool("doublejump", true);
                 }
             }
         }
@@ -56,11 +78,15 @@ public class Player : MonoBehaviour
         if(collision.gameObject.layer == 6)
         {
             isJumping = false;
+            anim.SetBool("jump", false);
+            anim.SetBool("doublejump", false);
         }
         
         if(collision.gameObject.layer == 7)
         {
             isJumping = false;
+            anim.SetBool("jump", false);
+            anim.SetBool("doublejump", false);
         }
 
     }
@@ -70,11 +96,13 @@ public class Player : MonoBehaviour
         if(collision.gameObject.layer == 6)
         {
             isJumping = true;
+            anim.SetBool("jump", true);
         }
 
         if(collision.gameObject.layer == 7)
         {
             isJumping = true;
+            anim.SetBool("jump", true);
         }
     }
 }
