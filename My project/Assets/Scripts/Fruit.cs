@@ -24,10 +24,11 @@ public class Fruit : MonoBehaviour
             sr.enabled = false;
             circle.enabled = false;
             collected.SetActive(true);
+            
+            Destroy(gameObject, 0.25f);
 
             GameController.instance.totalScore += Score;
-
-            Destroy(gameObject, 0.25f);
+            GameController.instance.UpdateScoreText();
         }
     }
 }
